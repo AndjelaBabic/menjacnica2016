@@ -63,10 +63,8 @@ public class MenjacnicaGUI extends JFrame {
 	private JMenuItem mntmSave;
 	private JMenuItem mntmExit;
 	private JMenuItem mntmAbout;
-	
-	//klasa na logickom nivou
-	protected Menjacnica sistem;
-	private JTable table;
+
+	private static JTable table;
 
 	/**
 	 * Create the frame.
@@ -89,8 +87,6 @@ public class MenjacnicaGUI extends JFrame {
 		setContentPane(contentPane);
 		contentPane.add(getScrollPane(), BorderLayout.CENTER);
 		contentPane.add(getPanel(), BorderLayout.EAST);
-		
-		sistem = new Menjacnica();
 	}
 
 	private JScrollPane getScrollPane() {
@@ -177,7 +173,7 @@ public class MenjacnicaGUI extends JFrame {
 			mntmNew = new JMenuItem("Open");
 			mntmNew.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
-					GUIKontroler.ucitajIzFajla((MenjacnicaTableModel) table.getModel());
+					GUIKontroler.ucitajIzFajla();
 				}
 			});
 			mntmNew.setIcon(new ImageIcon(MenjacnicaGUI.class.getResource("/com/sun/java/swing/plaf/windows/icons/Directory.gif")));
@@ -222,14 +218,8 @@ public class MenjacnicaGUI extends JFrame {
 	}
 	private static void addPopup(Component component, final JPopupMenu popup) {
 	}
-	
-	protected void prikaziSveValute() {
-		MenjacnicaTableModel model = (MenjacnicaTableModel)(table.getModel());
-		model.staviSveValuteUModel(sistem.vratiKursnuListu());
 
-	}
-
-	private JTable getTable() {
+	public static JTable getTable() {
 		if (table == null) {
 			table = new JTable();
 			table.setModel(new MenjacnicaTableModel());

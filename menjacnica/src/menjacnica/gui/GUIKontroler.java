@@ -8,11 +8,13 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.TableModel;
 
 import menjacnica.Menjacnica;
 import menjacnica.MenjacnicaInterface;
+import menjacnica.Valuta;
 import menjacnica.gui.models.MenjacnicaTableModel;
 
 public class GUIKontroler extends JFrame {
@@ -67,13 +69,18 @@ public class GUIKontroler extends JFrame {
 	
 	public static void prikaziObrisiKursGUI(int red, MenjacnicaTableModel tableModel) {
 		if (red != -1) {
-				ObrisiKursGUI prozor = new ObrisiKursGUI(glavniProzor,
-						tableModel.vratiValutu(red));
+				ObrisiKursGUI prozor = new ObrisiKursGUI(tableModel.vratiValutu(red));
 				prozor.setLocationRelativeTo(glavniProzor);
 				prozor.setVisible(true);
 			}
+		popuniPolja(tableModel.vratiValutu(red));
 	}
 	
+	private static void popuniPolja(Valuta valuta) {
+		
+		
+	}
+
 	public static void prikaziIzvrsiZamenuGUI(int red, MenjacnicaTableModel tableModel) {
 		if (red!= -1) {
 			IzvrsiZamenuGUI prozor = new IzvrsiZamenuGUI(glavniProzor,
@@ -84,7 +91,7 @@ public class GUIKontroler extends JFrame {
 	}
 	
 	
-	public static void ucitajIzFajla(MenjacnicaTableModel tableModel) {
+	public static void ucitajIzFajla() {
 		try {
 			JFileChooser fc = new JFileChooser();
 			int returnVal = fc.showOpenDialog(glavniProzor);
@@ -92,7 +99,7 @@ public class GUIKontroler extends JFrame {
 			if (returnVal == JFileChooser.APPROVE_OPTION) {
 				File file = fc.getSelectedFile();
 				menjacnica.ucitajIzFajla(file.getAbsolutePath());
-				prikaziSveValute(tableModel);
+				prikaziSveValute();
 			}	
 		} catch (Exception e1) {
 			JOptionPane.showMessageDialog(glavniProzor, e1.getMessage(),
@@ -100,8 +107,9 @@ public class GUIKontroler extends JFrame {
 		}
 	}
 	
-	protected static void prikaziSveValute(MenjacnicaTableModel tableModel) {
-		tableModel.staviSveValuteUModel(menjacnica.vratiKursnuListu());	
+	protected static void prikaziSveValute() {
+		MenjacnicaTableModel model = (MenjacnicaTableModel) glavniProzor.getTable().getModel();
+		model.staviSveValuteUModel(menjacnica.vratiKursnuListu());	
 	}
 	
 	public static void sacuvajUFajl() {
@@ -125,6 +133,59 @@ public class GUIKontroler extends JFrame {
 				"Autor: Bojan Tomic, Verzija 1.0", "O programu Menjacnica",
 				JOptionPane.INFORMATION_MESSAGE);
 	}
+	
+	public static void unesiKurs(int sifra, String naziv, double prodajni, double kupovni, double srednji, String skraceni) {
+		try {
+			Valuta valuta = new Valuta(sifra, skraceni, naziv, kupovni, srednji, prodajni);
+			// Dodavanje valute u kursnu listu
+			menjacnica.dodajValutu(valuta);
+			// Osvezavanje glavnog prozora
+			prikaziSveValute();
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Greska", JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
+	public static void prikaziValutu(JTextField tfSifra, JTextField tfNaziv, JTextField tfProdajniKurs, JTextField tfKupovniKurs, JTextField tfSrednjiKurs, JTextField tfSkraceniNaziv, Valuta v) {
+		// TODO Auto-generated method stub
+		tfSifra.setText(v.getSifra()+"");
+		tfNaziv.setText(v.getNaziv());
+		tfProdajniKurs.setText(v.getProdajni()+"");
+		tfKupovniKurs.setText(v.getKupovni()+"");
+		tfSrednjiKurs.setText(v.getKupovni()+"");
+		tfSkraceniNaziv.setText(v.getSkraceniNaziv());
+	}
+	
+	public static void obrisiValutu(Valuta valuta) {
+		try{
+			menjacnica.obrisiValutu(valuta);
+			prikaziSveValute();
+		} catch (Exception e1) {
+			JOptionPane.showMessageDialog(null, e1.getMessage(),
+					"Greska", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+
+	public static void prikaziValutu(JTextField tfProdajni, JTextField tfKupovni,
+			JTextField tfValuta, Valuta valuta) {
+		// TODO Auto-generated method stub
+		tfProdajni.setText(valuta.getProdajni()+"");
+		tfKupovni.setText(valuta.getKupovni()+"");
+		tfValuta.setText(valuta.getSkraceniNaziv());
+	}
+	
+	public static void izvrsiZamenu(Valuta v, boolean b, JTextField textFieldIznos, JTextField textFieldKonacniIznos){
+		try{
+			double konacniIznos = 
+					menjacnica.izvrsiTransakciju(v,b, 
+							Double.parseDouble(textFieldIznos.getText()));
+		
+			textFieldKonacniIznos.setText(""+konacniIznos);
+		} catch (Exception e1) {
+		JOptionPane.showMessageDialog(null, e1.getMessage(),
+				"Greska", JOptionPane.ERROR_MESSAGE);
+	}
+	}
 	
 }

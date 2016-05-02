@@ -13,10 +13,20 @@ public class Valuta implements Serializable {
 	private String naziv;
 	private double kupovni, srednji, prodajni;
 	
+	public Valuta(int sifra, String skraceniNaziv, String naziv, double kupovni, double srednji, double prodajni) {
+		super();
+		this.sifra = sifra;
+		this.skraceniNaziv = skraceniNaziv;
+		this.naziv = naziv;
+		this.kupovni = kupovni;
+		this.srednji = srednji;
+		this.prodajni = prodajni;
+	}
+	
 	public int getSifra() {
 		return sifra;
 	}
-	
+
 	public void setSifra(int sifra) {
 		this.sifra = sifra;
 	}
