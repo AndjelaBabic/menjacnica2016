@@ -228,6 +228,7 @@ public class ObrisiKursGUI extends JFrame {
 
 	private void obrisiValutu() {
 		try{
+			
 			glavniProzor.sistem.obrisiValutu(valuta);
 			
 			glavniProzor.prikaziSveValute();

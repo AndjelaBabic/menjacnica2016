@@ -197,7 +197,6 @@ public class DodajKursGUI extends JFrame {
 			
 			// Dodavanje valute u kursnu listu
 			glavniProzor.sistem.dodajValutu(valuta);
-
 			// Osvezavanje glavnog prozora
 			glavniProzor.prikaziSveValute();
 			
